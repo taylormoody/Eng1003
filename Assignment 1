@@ -1,0 +1,24 @@
+#include <stdio.h>
+#include <string.h>
+
+void railFence(char *message, char *cipherText, int length, int A);
+//Main group of code which runs all the functions//
+int main() {
+    //add switch function here to choose between which function to run
+	char output[1024];
+	railFence("this is a test message", output, 0, 4);
+	printf("%s\n", output);
+}
+//Basic RailFence cypher
+//Use template from assignment sheet modified to use specified functions
+void railFence(char *message, char *cipherText, int length, int A) {
+	char grid[strlen(message)][A];
+	int rail, i = 0, j = 0;
+
+}
+//2nd level Rail cypher
+void railFence(char *message, char *cipherText, int length, int A, int B) {
+	char grid[strlen(message)][A][B];
+	int rail, i = 0, j = 0;
+
+}
