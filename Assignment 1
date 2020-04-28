@@ -2,10 +2,12 @@
 #include <string.h>
 
 void railFence(char *message, char *cipherText, int length, int A);
-//Main group of code which runs all the functions//
+//Main group of code which runs all the functions
+//Max code length should be 8192
 int main() {
     //add switch function here to choose between which function to run
 	char output[1024];
+	//Need code to ensure all text is uppercase(Using ascii)
 	railFence("this is a test message", output, 0, 4);
 	printf("%s\n", output);
 }
@@ -17,8 +19,11 @@ void railFence(char *message, char *cipherText, int length, int A) {
 
 }
 //2nd level Rail cypher
-void railFence(char *message, char *cipherText, int length, int A, int B) {
+//modified version of basic cypher
+//Need code to limit the two levels chosen
+void railFence2(char *message, char *cipherText, int length, int A, int B, int dir){
+    //dir refers to either setting an encryption or decryption ie when dir =0 it should encrypt
 	char grid[strlen(message)][A][B];
 	int rail, i = 0, j = 0;
-
+//Decryption is basically the opposite of encryption
 }
