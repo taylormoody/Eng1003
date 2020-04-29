@@ -5,18 +5,76 @@ void railFence(char *message, char *cipherText, int length, int A);
 //Main group of code which runs all the functions
 //Max code length should be 8192
 int main() {
+    FILE *fp;
+    fp=fopen("file.txt","r");
     //add switch function here to choose between which function to run
 	char output[1024];
 	//Need code to ensure all text is uppercase(Using ascii)
 	railFence("this is a test message", output, 0, 4);
-	printf("%s\n", output);
+	if(fp == NULL) {
+       perror("Error opening file");
+       return(-1);
+    }
+    if( fgets (output, 1024, fp)!=NULL ) {
+       /* writing content to stdout */
+       puts(output);  
+    }
+	fclose(fp);
 }
 //Basic RailFence cypher
 //Use template from assignment sheet modified to use specified functions
 void railFence(char *message, char *cipherText, int length, int A) {
-	char grid[strlen(message)][A];
-	int rail, i = 0, j = 0;
-
+    FILE *fp;
+	length=strlen(message);
+	char grid[length][A];
+	int rail, i = 0, j = 0, counter=0,z=0;
+	rail=A;
+	//This Resets the grid Array to ensure no data from previous iterations
+	//can corrupt the new encryption
+	for(i=0;i<=rail;i++)
+	{
+	    for(j=0;j<=length;j++)
+	    {
+	        grid[i][j]=0;
+	    }
+	}
+	//reset to zero to be used in new loops, since the j interger
+	//was already used above
+    j=0;
+    while(j<length)
+    {
+        //This checks if the number is even or odd by seeing if it is
+        //divisible by two,will be expanded to other numbers later
+        if(counter%2==0)
+        {
+            for(i=0;i<rail;i++)
+            {
+                //Copies the current letter of the basic message across to other
+                //cipher code, since this is a basic transposition code
+                grid[i][j]=(int)message[j];
+                j++;
+            }
+        }
+        else
+        {
+            for(i=rail-2;i>0;i--)
+            {
+                grid[i][j]=(int)message[j];
+                j++;
+            }
+        }
+        counter++;
+    }
+    fp = fopen ("file.txt", "w");
+    for(i=0;i<length;i++)
+    {
+        for(j=0;j<A;j++)
+        {
+            if(grid[i][j]!=0)
+            fputc(grid[i][j],fp);
+        }
+    }
+    fclose(fp);
 }
 //2nd level Rail cypher
 //modified version of basic cypher
