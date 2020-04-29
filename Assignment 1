@@ -10,7 +10,7 @@ int main() {
     //add switch function here to choose between which function to run
 	char output[1024];
 	//Need code to ensure all text is uppercase(Using ascii)
-	railFence("this is a test message", output, 0, 4);
+	railFence("this is a test message, omg how long can i make it before the machine breks ahahahahahahah", output, 0, 4);
 	if(fp == NULL) {
        perror("Error opening file");
        return(-1);
@@ -26,14 +26,14 @@ int main() {
 void railFence(char *message, char *cipherText, int length, int A) {
     FILE *fp;
 	length=strlen(message);
-	char grid[length][A];
+	char grid[A][8192];
 	int rail, i = 0, j = 0, counter=0,z=0;
 	rail=A;
 	//This Resets the grid Array to ensure no data from previous iterations
 	//can corrupt the new encryption
-	for(i=0;i<=rail;i++)
+	for(i=0;i<rail;i++)
 	{
-	    for(j=0;j<=length;j++)
+	    for(j=0;j<length;j++)
 	    {
 	        grid[i][j]=0;
 	    }
@@ -66,9 +66,9 @@ void railFence(char *message, char *cipherText, int length, int A) {
         counter++;
     }
     fp = fopen ("file.txt", "w");
-    for(i=0;i<length;i++)
+    for(i=0;i<rail;i++)
     {
-        for(j=0;j<A;j++)
+        for(j=0;j<length;j++)
         {
             if(grid[i][j]!=0)
             fputc(grid[i][j],fp);
