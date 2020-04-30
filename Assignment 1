@@ -2,6 +2,7 @@
 #include <string.h>
 
 void railFence(char *message, char *cipherText, int length, int A);
+void railFence2(char *message, char *cipherText, int length, int A, int B, int dir);
 //Main group of code which runs all the functions
 //Max code length should be 8192
 int main() {
@@ -10,8 +11,17 @@ int main() {
     //add switch function here to choose between which function to run
 	char output[1024];
 	//Need code to ensure all text is uppercase(Using ascii)
-	railFence("this is a test message, omg how long can i make it before the machine breks ahahahahahahah", output, 0, 4);
-	if(fp == NULL) {
+	//railFence("this is a test message", output, 0, 4);
+	//if(fp == NULL) {
+    //   perror("Error opening file");
+    //   return(-1);
+    //}
+    //if( fgets (output, 1024, fp)!=NULL ) {
+    //   /* writing content to stdout */
+    //   puts(output);  
+    //}
+    railFence2("this is a test message", output, 0, 5, 3, 0);
+    if(fp == NULL) {
        perror("Error opening file");
        return(-1);
     }
@@ -26,12 +36,12 @@ int main() {
 void railFence(char *message, char *cipherText, int length, int A) {
     FILE *fp;
 	length=strlen(message);
-	char grid[A][8192];
-	int rail, i = 0, j = 0, counter=0,z=0;
+	char grid[A][1024];
+	int rail, i = 0, j = 0, counter=0;
 	rail=A;
 	//This Resets the grid Array to ensure no data from previous iterations
 	//can corrupt the new encryption
-	for(i=0;i<rail;i++)
+    for(i=0;i<rail;i++)
 	{
 	    for(j=0;j<length;j++)
 	    {
@@ -65,7 +75,113 @@ void railFence(char *message, char *cipherText, int length, int A) {
         }
         counter++;
     }
-    fp = fopen ("file.txt", "w");
+    //fp = fopen ("file.txt", "w");
+    for(i=0;i<rail;i++)
+    {
+        for(j=0;j<length;j++)
+        {
+            if(grid[i][j]!=0)
+            fputc(grid[i][j],fp);
+        }
+    }
+    //fclose(fp);
+}
+//2nd level Rail cypher
+//modified version of basic cypher
+//Need code to limit the two levels chosen
+void railFence2(char *message, char *cipherText, int length, int A, int B, int dir){
+    //dir refers to either setting an encryption or decryption ie when dir ==0 it should encrypt
+	FILE *fp;
+	length=strlen(message);
+	char grid[A][1024];
+	int rail,rail2, i = 0, j = 0, counter=0;
+	rail=A;
+	rail2=B;
+	printf("%d",B);
+	//make sure that A>B and that B>1 so that the rails work correctly
+	if(!(A>B))
+	{
+	    printf("Error:The Second rail cannot be larger or equal to the first");
+	    return;
+	}
+	else if(!(B>1))
+	{
+	    printf("Error: The Second Rail must be greater than 1");
+	    return;
+	}
+	//This Resets the grid Array to ensure no data from previous iterations
+	//can corrupt the new encryption
+	for(i=0;i<rail;i++)
+	{
+	    printf("%d",i);
+	    for(j=0;j<length;j++)
+	    {
+	        grid[i][j]=0;
+	    }
+	}
+	j=0;
+	printf("%d",j);
+	//Setting it to choose either the encryption or decryption functions setup
+	if(dir==0)
+	{
+        while(j<length)
+        {
+            //This checks if the number is even or odd by seeing if it is
+            //divisible by two,will be expanded to other numbers later
+            if(counter%4==0)
+            {
+                for(i=0;i<rail;i++)
+                {
+                    //Copies the current letter of the basic message across to other
+                    //cipher code, since this is a basic transposition code
+                    grid[i][j]=(int)message[j];
+                    printf("%c", grid[i][j]);
+                    j++;
+                }
+            }
+            else if(counter%4==1)
+            {
+                for(i=rail-2;i>=rail2;i--)
+                printf("%d",counter);
+                {  
+                    grid[i][j]=(int)message[j];
+                    printf("%c", grid[i][j]);
+                    j++;
+                }
+                    
+            }
+            else if(counter%4==2)
+            {
+                for(i=rail2-1;i<rail;i++)
+                printf("%d",counter);
+                {
+                    grid[i][j]=(int)message[j];
+                    printf("%c", grid[i][j]);
+                    j++;
+                }
+            }
+            else
+            {
+                for(i=rail-2;i>0;i--)
+                {
+                   grid[i][j]=(int)message[j];
+                   printf("%c", grid[i][j]);
+                   j++;
+                }
+            }
+            counter++;
+        }
+        dir=2;
+    }
+    else if(dir==1)
+    {
+        return;
+    }
+    else
+    {
+        return;
+    }
+    fp = fopen("file.txt", "w");
     for(i=0;i<rail;i++)
     {
         for(j=0;j<length;j++)
@@ -75,13 +191,6 @@ void railFence(char *message, char *cipherText, int length, int A) {
         }
     }
     fclose(fp);
-}
-//2nd level Rail cypher
-//modified version of basic cypher
-//Need code to limit the two levels chosen
-void railFence2(char *message, char *cipherText, int length, int A, int B, int dir){
-    //dir refers to either setting an encryption or decryption ie when dir =0 it should encrypt
-	char grid[strlen(message)][A][B];
-	int rail, i = 0, j = 0;
-//Decryption is basically the opposite of encryption
+
+    //Decryption is basically the opposite of encryption
 }
