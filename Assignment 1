@@ -97,7 +97,6 @@ void railFence2(char *message, char *cipherText, int length, int A, int B, int d
 	int rail,rail2, i = 0, j = 0, counter=0;
 	rail=A;
 	rail2=B;
-	printf("%d",B);
 	//make sure that A>B and that B>1 so that the rails work correctly
 	if(!(A>B))
 	{
@@ -113,14 +112,12 @@ void railFence2(char *message, char *cipherText, int length, int A, int B, int d
 	//can corrupt the new encryption
 	for(i=0;i<rail;i++)
 	{
-	    printf("%d",i);
 	    for(j=0;j<length;j++)
 	    {
 	        grid[i][j]=0;
 	    }
 	}
 	j=0;
-	printf("%d",j);
 	//Setting it to choose either the encryption or decryption functions setup
 	if(dir==0)
 	{
@@ -135,17 +132,14 @@ void railFence2(char *message, char *cipherText, int length, int A, int B, int d
                     //Copies the current letter of the basic message across to other
                     //cipher code, since this is a basic transposition code
                     grid[i][j]=(int)message[j];
-                    printf("%c", grid[i][j]);
                     j++;
                 }
             }
             else if(counter%4==1)
             {
                 for(i=rail-2;i>=rail2;i--)
-                printf("%d",counter);
                 {  
                     grid[i][j]=(int)message[j];
-                    printf("%c", grid[i][j]);
                     j++;
                 }
                     
@@ -153,10 +147,8 @@ void railFence2(char *message, char *cipherText, int length, int A, int B, int d
             else if(counter%4==2)
             {
                 for(i=rail2-1;i<rail;i++)
-                printf("%d",counter);
                 {
                     grid[i][j]=(int)message[j];
-                    printf("%c", grid[i][j]);
                     j++;
                 }
             }
@@ -165,7 +157,6 @@ void railFence2(char *message, char *cipherText, int length, int A, int B, int d
                 for(i=rail-2;i>0;i--)
                 {
                    grid[i][j]=(int)message[j];
-                   printf("%c", grid[i][j]);
                    j++;
                 }
             }
