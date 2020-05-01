@@ -6,35 +6,72 @@ void railFence2(char *message, char *cipherText, int length, int A, int B, int d
 //Main group of code which runs all the functions
 //Max code length should be 8192
 int main() {
-    FILE *fp;
-    fp=fopen("file.txt","r");
+    FILE *foutput;
+    FILE *finput;
     //add switch function here to choose between which function to run
 	char output[1024];
-	//Need code to ensure all text is uppercase(Using ascii)
-	//railFence("this is a test message", output, 0, 4);
-	//if(fp == NULL) {
-    //   perror("Error opening file");
-    //   return(-1);
-    //}
-    //if( fgets (output, 1024, fp)!=NULL ) {
-    //   /* writing content to stdout */
-    //   puts(output);  
-    //}
-    railFence2("this is a test message", output, 0, 5, 3, 0);
-    if(fp == NULL) {
-       perror("Error opening file");
-       return(-1);
-    }
-    if( fgets (output, 1024, fp)!=NULL ) {
-       /* writing content to stdout */
-       puts(output);  
-    }
-	fclose(fp);
+	char input[1024];
+	//Menu system asks for input and provides selected cryption
+	int menuChoice;
+	printf("Please Choose a menu option:\n");
+	printf("For Classic Rail Fence Encryption Press 1\n");
+	printf("For 2nd Level Encryption Press 2\n");
+	printf("For 2nd Level Decryption Press 3\n");
+	scanf("%d",&menuChoice);
+	switch(menuChoice)
+	{
+	    case 1:
+	        foutput=fopen("encryption.txt","r");
+	        railFence(input, output, 0, 4);
+	        if(foutput == NULL) {
+                perror("Error opening file");
+                return(-1);
+            }
+            if( fgets (output, 1024, foutput)!=NULL ) {
+                /* writing content to stdout */
+                puts(output);  
+            }
+            fclose(foutput);
+            break;
+        case 2:
+            foutput=fopen("encryption.txt","r");
+            railFence2(input, output, 0, 5, 3, 0);
+            if(foutput == NULL) {
+                perror("Error opening file");
+                return(-1);
+            }
+            if( fgets (output, 1024, foutput)!=NULL ) {
+                /* writing content to stdout */
+                puts(output);  
+            }
+            fclose(foutput);
+            break;
+        case 3:
+            finput=fopen("plaintext.txt","r");
+            railFence2(input, output, 0, 5, 3, 1);
+            if(finput==NULL) {
+                perror("Error opening file");
+                return(-1);
+            }
+            if( fgets (input, 1024, finput)!=NULL ) {
+                /* writing content to stdout */
+                puts(input);  
+            }
+            fclose(finput);
+            break;
+        default:
+            printf("Error: That is not an option");
+	}
 }
 //Basic RailFence cypher
 //Use template from assignment sheet modified to use specified functions
 void railFence(char *message, char *cipherText, int length, int A) {
-    FILE *fp;
+    FILE *foutput;
+    FILE *finput;
+    //Creating the message from plaintext.txt
+    finput=fopen("plaintext.txt","r");
+    fgets(message,1024,finput);
+    fclose(finput);
 	length=strlen(message);
 	char grid[A][1024];
 	int rail, i = 0, j = 0, counter=0;
@@ -75,24 +112,24 @@ void railFence(char *message, char *cipherText, int length, int A) {
         }
         counter++;
     }
-    //fp = fopen ("file.txt", "w");
+    foutput = fopen ("encryption.txt", "w");
     for(i=0;i<rail;i++)
     {
         for(j=0;j<length;j++)
         {
             if(grid[i][j]!=0)
-            fputc(grid[i][j],fp);
+            fputc(grid[i][j],foutput);
         }
     }
-    //fclose(fp);
+    fclose(foutput);
 }
 //2nd level Rail cypher
 //modified version of basic cypher
 //Need code to limit the two levels chosen
 void railFence2(char *message, char *cipherText, int length, int A, int B, int dir){
     //dir refers to either setting an encryption or decryption ie when dir ==0 it should encrypt
-	FILE *fp;
-	length=strlen(message);
+	FILE *foutput;
+	FILE *finput;
 	char grid[A][1024];
 	int rail,rail2, i = 0, j = 0, counter=0;
 	rail=A;
@@ -108,19 +145,24 @@ void railFence2(char *message, char *cipherText, int length, int A, int B, int d
 	    printf("Error: The Second Rail must be greater than 1");
 	    return;
 	}
-	//This Resets the grid Array to ensure no data from previous iterations
-	//can corrupt the new encryption
-	for(i=0;i<rail;i++)
-	{
-	    for(j=0;j<length;j++)
-	    {
-	        grid[i][j]=0;
-	    }
-	}
-	j=0;
 	//Setting it to choose either the encryption or decryption functions setup
 	if(dir==0)
-	{
+	{   
+	    //sets up message from the plaintext and also length being used for the grid
+	    finput=fopen("plaintext.txt","r");
+        fgets(message,1024,finput);
+        fclose(finput);
+	    length=strlen(message);
+	    //This Resets the grid Array to ensure no data from previous iterations
+	    //can corrupt the new encryption
+	    for(i=0;i<rail;i++)
+	    {
+	        for(j=0;j<length;j++)
+	        {
+	            grid[i][j]=0;
+	        }
+	    }
+	    j=0;
         while(j<length)
         {
             //This checks if the number is even or odd by seeing if it is
@@ -162,26 +204,98 @@ void railFence2(char *message, char *cipherText, int length, int A, int B, int d
             }
             counter++;
         }
-        dir=2;
+        foutput = fopen("encryption.txt", "w");
+        for(i=0;i<rail;i++)
+        {
+            for(j=0;j<length;j++)
+            {
+                if(grid[i][j]!=0)
+                fputc(grid[i][j],foutput);
+            }
+        }
+        fclose(foutput);
+
     }
     else if(dir==1)
     {
-        return;
-    }
-    else
-    {
-        return;
-    }
-    fp = fopen("file.txt", "w");
-    for(i=0;i<rail;i++)
-    {
+        //This a copy of the encryption from above but instead creates an empty array of 0's and 1's, in the shape
+        //of a correct 2nd level rail pattern
+        
+        //sets up message from the encryption and also length being used for the grid
+	    foutput=fopen("encryption.txt","r");
+        fgets(cipherText,1024,foutput);
+        fclose(foutput);
+	    length=strlen(cipherText);
+	    //This Resets the grid Array to ensure no data from previous iterations
+	    //can corrupt the new encryption
+	    for(i=0;i<rail;i++)
+	    {
+	        for(j=0;j<length;j++)
+	        {
+	            grid[i][j]=0;
+	        }
+	    }
+	    j=0;
+        while(j<length)
+        {
+            //This checks if the number is even or odd by seeing if it is
+            //divisible by two,will be expanded to other numbers later
+            if(counter%4==0)
+            {
+                for(i=0;i<rail;i++)
+                {
+                    grid[i][j]=1;
+                    j++;
+                }
+            }
+            else if(counter%4==1)
+            {
+                for(i=rail-2;i>=rail2;i--)
+                {  
+                    grid[i][j]=1;
+                    j++;
+                }
+                    
+            }
+            else if(counter%4==2)
+            {
+                for(i=rail2-1;i<rail;i++)
+                {
+                    grid[i][j]=1;
+                    j++;
+                }
+            }
+            else
+            {
+                for(i=rail-2;i>0;i--)
+                {
+                   grid[i][j]=1;
+                   j++;
+                }
+            }
+            counter++;
+        }
+        //This code basically checks each line for a 1 and if it finds it, copyies over the encrypted version"filling the grid"
+        foutput = fopen("encryption.txt", "r");
+        for(i=0;i<rail;i++)
+        {
+            for(j=0;j<length;j++)
+            {
+                if(grid[i][j]==1)
+                grid[i][j]=fgetc(foutput);
+            }
+        }
+        fclose(foutput);
+        //Final stage here reads the grid using previous functions to print to the file
+        finput=fopen("plaintext.txt","w");
         for(j=0;j<length;j++)
         {
-            if(grid[i][j]!=0)
-            fputc(grid[i][j],fp);
+            for(i=0;i<rail;i++)
+            {
+                if(grid[i][j]!=0)
+                fputc(grid[i][j],finput);
+            }
         }
+        fclose(finput);
     }
-    fclose(fp);
-
-    //Decryption is basically the opposite of encryption
 }
