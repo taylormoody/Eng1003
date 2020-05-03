@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-
+//Requires a plaintext.txt and encryption.txt files to work with file I/O
 void railFence(char *message, char *cipherText, int length, int A);
 void railFence2(char *message, char *cipherText, int length, int A, int B, int dir);
 //Main group of code which runs all the functions
